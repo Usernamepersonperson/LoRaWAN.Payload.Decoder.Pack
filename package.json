@@ -1,0 +1,23 @@
+{
+  "name": "lorawan-payload-decoder-pack",
+  "version": "1.0.0",
+  "description": "LoRaWAN payload decoders for ChirpStack (Cayenne LPP + Binary)",
+  "main": "decoders/ts/cayenne_lpp.ts",
+  "scripts": {
+    "test": "python -m pytest tests/",
+    "build": "tsc"
+  },
+  "keywords": [
+    "lorawan",
+    "chirpstack",
+    "cayenne-lpp",
+    "payload-decoder",
+    "iot"
+  ],
+  "author": "Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "binary_decoder_examples": [
+    {
+      "description": "Temperature + Humidity (Port 1)",
+      "fPort": 1,
+      "payload_hex": "0A0741",
+      "payload_bytes": [10, 7, 65],
+      "expected_output": {
+        "temperature": 25.67,
+        "humidity": 65
+      }
+    },
+    {
+      "description": "Simple GPS coordinates (Port 2)",
+      "fPort": 2,
+      "payload_hex": "031F940800CC5EEA",
+      "payload_bytes": [3, 31, 148, 8, 0, 204, 94, 234],
+      "expected_output": {
+        "latitude": 52.520008,
+        "longitude": 13.404954
+      }
+    },
+    {
+      "description": "Multi-sensor data (Port 3)",
+      "fPort": 3,
+      "payload_hex": "5509293C04B0",
+      "payload_bytes": [85, 9, 41, 60, 4, 176],
+      "expected_output": {
+        "battery": 85,
+        "temperature": 23.45,
+        "humidity": 60,
+        "light": 1200
+      }
+    },
+    {
+      "description": "Cold temperature reading (Port 1)",
+      "fPort": 1,
+      "payload_hex": "F83C32",
+      "payload_bytes": [248, 60, 50],
+      "expected_output": {
+        "temperature": -19.64,
+        "humidity": 50
+      }
+    },
+    {
+      "description": "High precision GPS (Port 2)",
+      "fPort": 2,
+      "payload_hex": "02FAF08001312D00",
+      "payload_bytes": [2, 250, 240, 128, 1, 49, 45, 0],
+      "expected_output": {
+        "latitude": 50.110592,
+        "longitude": 20.0
+      }
+    }
+  ]
+}

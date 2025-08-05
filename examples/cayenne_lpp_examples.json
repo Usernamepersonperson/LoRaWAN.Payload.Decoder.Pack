@@ -1,0 +1,54 @@
+{
+  "cayenne_lpp_examples": [
+    {
+      "description": "Temperature sensor on channel 1",
+      "payload_hex": "01670110",
+      "payload_bytes": [1, 103, 1, 16],
+      "expected_output": {
+        "temperature_1": 27.2
+      }
+    },
+    {
+      "description": "Humidity sensor on channel 2",
+      "payload_hex": "02688",
+      "payload_bytes": [2, 104, 136],
+      "expected_output": {
+        "humidity_2": 68.0
+      }
+    },
+    {
+      "description": "GPS sensor on channel 3",
+      "payload_hex": "03BC426F00FF33D0000096",
+      "payload_bytes": [3, 188, 66, 111, 0, 255, 51, 208, 0, 0, 150],
+      "expected_output": {
+        "gps_3": {
+          "latitude": 4.2671,
+          "longitude": -3.3072,
+          "altitude": 1.5
+        }
+      }
+    },
+    {
+      "description": "Multiple sensors: temperature + humidity + accelerometer",
+      "payload_hex": "01670110026888037103E8000003E8",
+      "payload_bytes": [1, 103, 1, 16, 2, 104, 136, 3, 113, 3, 232, 0, 0, 3, 232],
+      "expected_output": {
+        "temperature_1": 27.2,
+        "humidity_2": 68.0,
+        "accelerometer_3": {
+          "x": 1.0,
+          "y": 0.0,
+          "z": 1.0
+        }
+      }
+    },
+    {
+      "description": "Analog input on channel 4",
+      "payload_hex": "040203E8",
+      "payload_bytes": [4, 2, 3, 232],
+      "expected_output": {
+        "analog_input_4": 10.0
+      }
+    }
+  ]
+}
