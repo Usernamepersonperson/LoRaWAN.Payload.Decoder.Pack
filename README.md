@@ -67,3 +67,9 @@ python tests/test_binary_decoder.py
 - [ChirpStack Codec Documentation](https://www.chirpstack.io/docs/chirpstack/use/device-profiles.html#codec)
 - [Cayenne LPP Specification](https://developers.mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload)
 - [LoRaWAN Specification](https://lora-alliance.org/resource_hub/lorawan-specification-v1-0-3/)
+## Quick Start
+
+1. Bootstrap is auto-applied via global profile.
+2. Run validation: bash scripts/validate.sh all
+3. Push to GitHub to enable cron workflows.
+
