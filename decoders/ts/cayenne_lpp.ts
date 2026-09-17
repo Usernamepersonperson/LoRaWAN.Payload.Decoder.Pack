@@ -1,5 +1,6 @@
 /**
- * Cayenne LPP (Low Power Payload) decoder for ChirpStack
+ * Cayenne LPP (Low Power Payload) decoder -- application-side TypeScript.
+ * For a codec to paste into ChirpStack / The Things Stack use decoders/js/cayenne_lpp.js.
  */
 
 interface LppType {
@@ -13,6 +14,7 @@ const LPP_TYPES: Record<number, LppType> = {
   1: { name: "digital_output", size: 1, decode: (x) => x[0] },
   2: { name: "analog_input", size: 2, decode: (x) => readInt16BE(x, 0) / 100.0 },
   3: { name: "analog_output", size: 2, decode: (x) => readInt16BE(x, 0) / 100.0 },
+  100: { name: "generic", size: 4, decode: (x) => readUInt32BE(x, 0) },
   101: { name: "illuminance", size: 2, decode: (x) => readUInt16BE(x, 0) },
   102: { name: "presence", size: 1, decode: (x) => x[0] },
   103: { name: "temperature", size: 2, decode: (x) => readInt16BE(x, 0) / 10.0 },
@@ -30,23 +32,39 @@ const LPP_TYPES: Record<number, LppType> = {
   116: { name: "voltage", size: 2, decode: (x) => readUInt16BE(x, 0) / 100.0 },
   117: { name: "current", size: 2, decode: (x) => readUInt16BE(x, 0) / 1000.0 },
   118: { name: "frequency", size: 4, decode: (x) => readUInt32BE(x, 0) },
-  134: { name: "power", size: 2, decode: (x) => readUInt16BE(x, 0) },
-  136: { name: "distance", size: 4, decode: (x) => readUInt32BE(x, 0) / 1000.0 },
-  138: { name: "energy", size: 4, decode: (x) => readUInt32BE(x, 0) / 1000.0 },
-  142: { name: "direction", size: 2, decode: (x) => readUInt16BE(x, 0) },
-  188: { 
-    name: "gps", 
-    size: 9, 
+  120: { name: "percentage", size: 1, decode: (x) => x[0] },
+  121: { name: "altitude", size: 2, decode: (x) => readInt16BE(x, 0) },
+  125: { name: "concentration", size: 2, decode: (x) => readUInt16BE(x, 0) },
+  128: { name: "power", size: 2, decode: (x) => readUInt16BE(x, 0) },
+  130: { name: "distance", size: 4, decode: (x) => readUInt32BE(x, 0) / 1000.0 },
+  131: { name: "energy", size: 4, decode: (x) => readUInt32BE(x, 0) / 1000.0 },
+  132: { name: "direction", size: 2, decode: (x) => readUInt16BE(x, 0) },
+  133: { name: "unixtime", size: 4, decode: (x) => readUInt32BE(x, 0) },
+  134: {
+    name: "gyrometer",
+    size: 6,
+    decode: (x) => ({
+      x: readInt16BE(x, 0) / 100.0,
+      y: readInt16BE(x, 2) / 100.0,
+      z: readInt16BE(x, 4) / 100.0
+    })
+  },
+  135: { name: "colour", size: 3, decode: (x) => ({ r: x[0], g: x[1], b: x[2] }) },
+  136: {
+    name: "gps",
+    size: 9,
     decode: (x) => ({
       latitude: readInt24BE(x, 0) / 10000.0,
       longitude: readInt24BE(x, 3) / 10000.0,
       altitude: readInt24BE(x, 6) / 100.0
     })
-  }
+  },
+  142: { name: "switch", size: 1, decode: (x) => x[0] }
 };
 
 function readInt16BE(buffer: Uint8Array, offset: number): number {
-  return (buffer[offset] << 8) | buffer[offset + 1];
+  const value = (buffer[offset] << 8) | buffer[offset + 1];
+  return value & 0x8000 ? value - 0x10000 : value; // signed: sub-zero readings
 }
 
 function readUInt16BE(buffer: Uint8Array, offset: number): number {

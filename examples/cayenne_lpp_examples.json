@@ -1,37 +1,175 @@
 {
   "cayenne_lpp_examples": [
     {
-      "description": "Temperature sensor on channel 1",
+      "description": "Temperature 27.2 C on channel 1 (myDevices spec vector, first field)",
       "payload_hex": "01670110",
-      "payload_bytes": [1, 103, 1, 16],
+      "payload_bytes": [
+        1,
+        103,
+        1,
+        16
+      ],
       "expected_output": {
         "temperature_1": 27.2
       }
     },
     {
-      "description": "Humidity sensor on channel 2",
-      "payload_hex": "02688",
-      "payload_bytes": [2, 104, 136],
+      "description": "Sub-zero temperature -4.1 C (myDevices spec vector)",
+      "payload_hex": "0167FFD7",
+      "payload_bytes": [
+        1,
+        103,
+        255,
+        215
+      ],
+      "expected_output": {
+        "temperature_1": -4.1
+      }
+    },
+    {
+      "description": "Humidity 68 % on channel 2",
+      "payload_hex": "026888",
+      "payload_bytes": [
+        2,
+        104,
+        136
+      ],
       "expected_output": {
         "humidity_2": 68.0
       }
     },
     {
-      "description": "GPS sensor on channel 3",
-      "payload_hex": "03BC426F00FF33D0000096",
-      "payload_bytes": [3, 188, 66, 111, 0, 255, 51, 208, 0, 0, 150],
+      "description": "Two temperature sensors (myDevices spec vector)",
+      "payload_hex": "03670110056700FF",
+      "payload_bytes": [
+        3,
+        103,
+        1,
+        16,
+        5,
+        103,
+        0,
+        255
+      ],
       "expected_output": {
-        "gps_3": {
-          "latitude": 4.2671,
-          "longitude": -3.3072,
-          "altitude": 1.5
+        "temperature_3": 27.2,
+        "temperature_5": 25.5
+      }
+    },
+    {
+      "description": "Accelerometer with a negative axis (myDevices spec vector)",
+      "payload_hex": "067104D2FB2E0000",
+      "payload_bytes": [
+        6,
+        113,
+        4,
+        210,
+        251,
+        46,
+        0,
+        0
+      ],
+      "expected_output": {
+        "accelerometer_6": {
+          "x": 1.234,
+          "y": -1.234,
+          "z": 0.0
         }
+      }
+    },
+    {
+      "description": "GPS, western hemisphere: negative longitude (myDevices spec vector)",
+      "payload_hex": "018806765FF2960A0003E8",
+      "payload_bytes": [
+        1,
+        136,
+        6,
+        118,
+        95,
+        242,
+        150,
+        10,
+        0,
+        3,
+        232
+      ],
+      "expected_output": {
+        "gps_1": {
+          "latitude": 42.3519,
+          "longitude": -87.9094,
+          "altitude": 10.0
+        }
+      }
+    },
+    {
+      "description": "Analog input 10.00 on channel 4",
+      "payload_hex": "040203E8",
+      "payload_bytes": [
+        4,
+        2,
+        3,
+        232
+      ],
+      "expected_output": {
+        "analog_input_4": 10.0
+      }
+    },
+    {
+      "description": "Extended types: voltage 3.30 V + percentage 87 %",
+      "payload_hex": "0174014A027857",
+      "payload_bytes": [
+        1,
+        116,
+        1,
+        74,
+        2,
+        120,
+        87
+      ],
+      "expected_output": {
+        "voltage_1": 3.3,
+        "percentage_2": 87
+      }
+    },
+    {
+      "description": "Extended types: distance 1.5 m + switch on",
+      "payload_hex": "0182000005DC028E01",
+      "payload_bytes": [
+        1,
+        130,
+        0,
+        0,
+        5,
+        220,
+        2,
+        142,
+        1
+      ],
+      "expected_output": {
+        "distance_1": 1.5,
+        "switch_2": 1
       }
     },
     {
       "description": "Multiple sensors: temperature + humidity + accelerometer",
       "payload_hex": "01670110026888037103E8000003E8",
-      "payload_bytes": [1, 103, 1, 16, 2, 104, 136, 3, 113, 3, 232, 0, 0, 3, 232],
+      "payload_bytes": [
+        1,
+        103,
+        1,
+        16,
+        2,
+        104,
+        136,
+        3,
+        113,
+        3,
+        232,
+        0,
+        0,
+        3,
+        232
+      ],
       "expected_output": {
         "temperature_1": 27.2,
         "humidity_2": 68.0,
@@ -41,14 +179,42 @@
           "z": 1.0
         }
       }
+    }
+  ],
+  "cayenne_lpp_warning_examples": [
+    {
+      "description": "Unknown type stops decoding but keeps earlier fields",
+      "payload_hex": "0167011002FF00",
+      "expected_output": {
+        "temperature_1": 27.2
+      },
+      "expected_warning_count": 1,
+      "payload_bytes": [
+        1,
+        103,
+        1,
+        16,
+        2,
+        255,
+        0
+      ]
     },
     {
-      "description": "Analog input on channel 4",
-      "payload_hex": "040203E8",
-      "payload_bytes": [4, 2, 3, 232],
+      "description": "Truncated field is skipped, never half-decoded",
+      "payload_hex": "01670110028806",
       "expected_output": {
-        "analog_input_4": 10.0
-      }
+        "temperature_1": 27.2
+      },
+      "expected_warning_count": 1,
+      "payload_bytes": [
+        1,
+        103,
+        1,
+        16,
+        2,
+        136,
+        6
+      ]
     }
   ]
 }

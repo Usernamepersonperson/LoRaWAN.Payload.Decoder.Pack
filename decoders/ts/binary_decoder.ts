@@ -3,7 +3,8 @@
  */
 
 function readInt16BE(buffer: Uint8Array, offset: number): number {
-  return (buffer[offset] << 8) | buffer[offset + 1];
+  const value = (buffer[offset] << 8) | buffer[offset + 1];
+  return value & 0x8000 ? value - 0x10000 : value; // signed: sub-zero readings
 }
 
 function readUInt16BE(buffer: Uint8Array, offset: number): number {

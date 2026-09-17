@@ -22,13 +22,13 @@ class TestCayenneLPP(unittest.TestCase):
         self.assertEqual(result['humidity_2'], 68.0)
     
     def test_gps_sensor(self):
-        # Channel 3, Type 188 (GPS)
-        payload = bytes([0x03, 0xBC, 0x42, 0x6F, 0x00, 0xFF, 0x33, 0xD0, 0x00, 0x00, 0x96])
-        result = decode(payload)
-        self.assertIn('gps_3', result)
-        self.assertIn('latitude', result['gps_3'])
-        self.assertIn('longitude', result['gps_3'])
-    
+        # Channel 1, Type 136 (GPS) -- the myDevices spec vector, negative longitude
+        payload = bytes.fromhex("018806765ff2960a0003e8")
+        gps = decode(payload)['gps_1']
+        self.assertAlmostEqual(gps['latitude'], 42.3519, places=4)
+        self.assertAlmostEqual(gps['longitude'], -87.9094, places=4)
+        self.assertAlmostEqual(gps['altitude'], 10.0, places=2)
+
     def test_multiple_sensors(self):
         # Temperature + Humidity
         payload = bytes([0x01, 0x67, 0x01, 0x10, 0x02, 0x68, 0x88])
